@@ -18,4 +18,4 @@ echo "Running ogr2ogr from:"
 echo "  Input:  ${INPUT_S3_PATH}"
 echo "  Output: ${OUTPUT_S3_PATH}"
 
-ogr2ogr -dsco MINZOOM=0 -dsco MAXZOOM=14 -f "PMTiles" "${OUTPUT_S3_PATH}" "${INPUT_S3_PATH}" -progress
+ogr2ogr -dsco MINZOOM=0 -dsco MAXZOOM=10 -f "PMTiles" "${OUTPUT_S3_PATH}" "${INPUT_S3_PATH}" -progress
