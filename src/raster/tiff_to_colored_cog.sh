@@ -17,8 +17,9 @@ if [ "$#" -ne 3 ]; then
 fi
 
 
+# for non-ec2 usage:
+#    --env-file <(env) \
 docker run --rm \
-    --env-file <(env) \
     -v "$PWD":/data \
     -w /data \
     sparkgeo/geodocker:latest \
@@ -29,17 +30,23 @@ docker run --rm \
 
         gdalwarp \
             -t_srs "EPSG:3857" \
+            -overwrite \
+            -multi \
+            -wo NUM_THREADS=ALL_CPUS \
+            --config GDAL_CACHEMAX 2048 \
+            -co BIGTIFF=YES \
+            -co COMPRESS=NONE \
             $SRC_TIFF_PATH \
             $WARPED_TIFF_PATH
 
         gdaldem color-relief \
             -of COG \
-            -co "COMPRESS=DEFLATE" \
-            -co "NUM_THREADS=ALL_CPUS" \
+            -co COMPRESS=DEFLATE \
             -co PREDICTOR=2 \
             -co BLOCKSIZE=512 \
             --config GDAL_CACHEMAX 2048 \
-            -co "BIGTIFF=YES" \
+            --config NUM_THREADS ALL_CPUS \
+            -co BIGTIFF=YES \
             -nearest_color_entry \
             -alpha \
             $WARPED_TIFF_PATH $COLOR_TABLE_FILE $TARG_TIFF_PATH
