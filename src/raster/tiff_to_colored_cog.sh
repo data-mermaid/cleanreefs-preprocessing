@@ -7,7 +7,7 @@ TARG_TIFF_S3_PATH="$2"
 COLOR_TABLE_FILE="$3"
 
 SRC_TIFF_PATH="$WORKING_DIR/source.tif"
-WARPED_TIFF_PATH="$WORKING_DIR/warped.tif"
+WARPED_VRT_PATH="$WORKING_DIR/warped.vrt"
 TARG_TIFF_PATH="$WORKING_DIR/target.tif"
 
 ## Check if all positional arguments are passed
@@ -29,15 +29,10 @@ docker run --rm \
         ls -al "$WORKING_DIR"
 
         gdalwarp \
-            -t_srs "EPSG:3857" \
-            -overwrite \
-            -multi \
-            -wo NUM_THREADS=ALL_CPUS \
-            --config GDAL_CACHEMAX 2048 \
-            -co BIGTIFF=YES \
-            -co COMPRESS=NONE \
+            -t_srs \"EPSG:3857\" \
+            -of VRT \
             $SRC_TIFF_PATH \
-            $WARPED_TIFF_PATH
+            $WARPED_VRT_PATH
 
         gdaldem color-relief \
             -of COG \
@@ -49,7 +44,7 @@ docker run --rm \
             -co BIGTIFF=YES \
             -nearest_color_entry \
             -alpha \
-            $WARPED_TIFF_PATH $COLOR_TABLE_FILE $TARG_TIFF_PATH
+            $WARPED_VRT_PATH $COLOR_TABLE_FILE $TARG_TIFF_PATH
 
         aws s3 cp $TARG_TIFF_PATH $TARG_TIFF_S3_PATH
 
