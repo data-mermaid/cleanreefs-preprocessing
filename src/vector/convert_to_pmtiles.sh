@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-S3_PREFIX="/vsis3/gpw-coastal-pollution-model-data-public-0001/inputs/land/global/global_watershed_bas/global_watershed_bas^0/"
+S3_PREFIX="/vsis3/gpw-coastal-pollution-model-data-public-0001/app/"
 
 if [ "$#" -ne 2 ]; then
     echo "Usage: $0 <output.pmtiles> <input.parquet>"
@@ -18,4 +18,4 @@ echo "Running ogr2ogr from:"
 echo "  Input:  ${INPUT_S3_PATH}"
 echo "  Output: ${OUTPUT_S3_PATH}"
 
-ogr2ogr -dsco MINZOOM=0 -dsco MAXZOOM=10 -f "PMTiles" "${OUTPUT_S3_PATH}" "${INPUT_S3_PATH}" -progress
+ogr2ogr -dsco MINZOOM=0 -dsco MAXZOOM=10 -f "PMTiles" "${OUTPUT_S3_PATH}" "${INPUT_S3_PATH}" -t_srs EPSG:3857 -progress

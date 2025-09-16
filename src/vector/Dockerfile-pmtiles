@@ -17,34 +17,26 @@ RUN pip3 install --no-cache-dir --break-system-packages pandas pyarrow
 
 RUN mkdir /data
 
-#COPY ./convert_to_pmtiles.sh /convert_to_pmtiles.sh
-#RUN chmod +x /convert_to_pmtiles.sh
-#ENTRYPOINT ["/convert_to_pmtiles.sh"]
+COPY ./convert_to_pmtiles.sh /convert_to_pmtiles.sh
+RUN chmod +x /convert_to_pmtiles.sh
+ENTRYPOINT ["/convert_to_pmtiles.sh"]
 
 
-#Notes
 #docker build -t gdal .
 #
 #screen -S gdalrun
 #
 #docker run -it \
-#  -e AWS_ACCESS_KEY_ID= \
-#  -e AWS_SECRET_ACCESS_KEY= \
-#  -e AWS_REGION=ap-southeast-2 \
-#  -v $(pwd)/data/:/data \
 #  gdal \
-#  EEZ_land_union_v4_202410.pmtiles \
-#  EEZ_land_union_v4_202410.parquet
+#  countries/countries.pmtiles \
+#  countries/countries.parquet
+
 #ctrl + a, then d
 #screen -r gdalrun
 #
 #With entrypoint commented:
 #docker run -it \
-#  -e AWS_ACCESS_KEY_ID= \
-#  -e AWS_SECRET_ACCESS_KEY= \
-#  -e AWS_REGION=ap-southeast-2 \
-#  -v $(pwd)/data/:/data \
 #  gdal \
 #  bash
-#
+
 #python3 -c "import pandas as pd; df = pd.read_parquet('/data/EEZ_land_union_v4_202410.parquet'); print(df.head())"
